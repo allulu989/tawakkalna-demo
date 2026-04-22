@@ -1,1113 +1,647 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>توكلنا - نقل سجل المحادثات | عرض تفاعلي</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Allulu Alkheraiji | Product Portfolio</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-    font-family:'Tajawal',sans-serif;
-    background:#F5F8F0;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    overflow:hidden;
-    user-select:none;
-}
-
-/* ========== TOP BAR ========== */
-.top-bar{
-    width:100%;
-    padding:18px 40px 14px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    background:#EAF0E4;
-    border-bottom:1px solid #C2D2BA;
-}
-.top-bar .logo-area{
-    display:flex;align-items:center;gap:12px;
-}
-.top-bar .logo-icon{
-    width:38px;height:38px;
-    background:linear-gradient(135deg,#3D5A4C,#5A7D5E);
-    border-radius:10px;
-    display:flex;align-items:center;justify-content:center;
-    color:#fff;font-weight:900;font-size:16px;
-}
-.top-bar h1{
-    color:#2D4738;font-size:18px;font-weight:700;
-}
-.top-bar h1 span{color:#5A7D5E;}
-
-/* Steps indicator */
-.steps-dots{
-    display:flex;gap:8px;align-items:center;
-}
-.step-dot{
-    width:12px;height:12px;border-radius:50%;
-    background:#C2D2BA;
-    transition:all 0.4s cubic-bezier(.4,0,.2,1);
-    position:relative;
-}
-.step-dot.active{
-    background:#5A7D5E;
-    box-shadow:0 0 12px rgba(90,125,94,0.5);
-    width:32px;border-radius:6px;
-}
-.step-dot.done{background:#3D5A4C;}
-
-.restart-btn{
-    background:#C8D9BE;
-    border:1px solid #C2D2BA;
-    color:#3D5A4C;padding:8px 18px;border-radius:10px;
-    font-family:'Tajawal';font-size:13px;font-weight:600;
-    cursor:pointer;transition:all 0.3s;
-}
-.restart-btn:hover{background:#5A7D5E;color:#fff;border-color:#5A7D5E;}
-
-/* ========== MAIN AREA ========== */
-.main-area{
-    flex:1;display:flex;align-items:center;justify-content:center;
-    gap:50px;padding:20px;
-    transition:all 0.6s cubic-bezier(.4,0,.2,1);
-}
-
-/* ========== PHONE ========== */
-.phone-container{
-    text-align:center;
-    transition:all 0.7s cubic-bezier(.4,0,.2,1);
-}
-.phone-container.hidden-phone{
-    opacity:0;transform:scale(0.8) translateX(-60px);
-    pointer-events:none;width:0;overflow:hidden;margin:0;padding:0;
-}
-.phone-container.visible-phone{
-    opacity:1;transform:scale(1) translateX(0);
-}
-.phone-tag{
-    color:#506B56;font-size:13px;font-weight:600;
-    margin-bottom:12px;letter-spacing:1px;
-}
-.phone-tag span{
-    background:#EAF0E4;
-    padding:4px 14px;border-radius:20px;
-    border:1px solid #C2D2BA;
-}
-.phone-tag .new-tag span{border-color:rgba(90,125,94,0.3);color:#5A7D5E;}
-
-.phone{
-    width:290px;height:608px;
-    background:#000;
-    border-radius:42px;
-    padding:4px;
-    position:relative;
-    box-shadow:
-        0 0 0 1px rgba(0,0,0,0.08),
-        0 25px 80px rgba(61,90,76,0.15),
-        0 4px 20px rgba(0,0,0,0.12),
-        inset 0 0 0 1px rgba(255,255,255,0.05);
-}
-.phone-inner{
-    width:100%;height:100%;
-    background:#F5F5F5;
-    border-radius:38px;
-    overflow:hidden;
-    position:relative;
-}
-
-/* Status Bar */
-.status-bar{
-    display:flex;justify-content:space-between;align-items:center;
-    padding:14px 22px 0;font-size:12px;font-weight:700;
-    color:#1a1a2e;position:relative;z-index:10;
-    height:50px;
-}
-.status-icons{display:flex;align-items:center;gap:5px;font-size:11px;}
-
-/* Dynamic Island */
-.dynamic-island{
-    width:90px;height:26px;
-    background:#000;border-radius:20px;
-    position:absolute;top:10px;left:50%;transform:translateX(-50%);
-    z-index:20;
-}
-
-/* Screen Container */
-.screen{
-    position:absolute;top:0;left:0;right:0;bottom:0;
-    opacity:0;transform:translateX(-30px);
-    transition:all 0.45s cubic-bezier(.4,0,.2,1);
-    pointer-events:none;
-    display:flex;flex-direction:column;
-}
-.screen.active{
-    opacity:1;transform:translateX(0);pointer-events:auto;
-}
-
-/* ========== SCREEN 1: SETTINGS ========== */
-.profile-header{
-    background:linear-gradient(135deg,#3D5A4C 0%,#4D6E55 50%,#5A7D5E 100%);
-    padding:56px 20px 22px;
-    text-align:center;color:#fff;
-    position:relative;overflow:hidden;
-}
-.profile-header::before{
-    content:'';position:absolute;top:-40px;right:-40px;
-    width:120px;height:120px;
-    background:rgba(255,255,255,0.06);border-radius:50%;
-}
-.profile-header::after{
-    content:'';position:absolute;bottom:-30px;left:-20px;
-    width:80px;height:80px;
-    background:rgba(255,255,255,0.04);border-radius:50%;
-}
-.avatar-circle{
-    width:52px;height:52px;
-    background:rgba(255,255,255,0.2);
-    border-radius:50%;margin:0 auto 8px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:26px;
-    backdrop-filter:blur(10px);
-    border:2px solid rgba(255,255,255,0.2);
-}
-.profile-name{font-size:20px;font-weight:800;margin-bottom:4px;}
-
-.settings-body{
-    flex:1;background:#F4F5F7;
-    overflow-y:auto;padding-bottom:70px;
-}
-.menu-group{
-    background:#fff;margin:10px 14px;
-    border-radius:14px;overflow:hidden;
-    box-shadow:0 1px 3px rgba(0,0,0,0.04);
-}
-.menu-row{
-    display:flex;align-items:center;
-    padding:13px 16px;
-    border-bottom:1px solid #F0F0F0;
-    transition:background 0.2s;
-    cursor:default;
-    position:relative;
-}
-.menu-row:last-child{border-bottom:none;}
-.menu-row.clickable{cursor:pointer;}
-.menu-row.clickable:hover{background:#F8FAF9;}
-.menu-row.clickable:active{background:#EEF5F2;}
-.menu-row.highlight{
-    animation:pulseHighlight 2s infinite;
-}
-@keyframes pulseHighlight{
-    0%,100%{background:#fff;}
-    50%{background:#EAF0E4;}
-}
-.mi{
-    width:32px;height:32px;border-radius:9px;
-    display:flex;align-items:center;justify-content:center;
-    margin-left:12px;font-size:15px;flex-shrink:0;
-}
-.mi.g{background:#EAF0E4;color:#3D5A4C;}
-.mi.b{background:#E8F0FE;color:#3B7DDD;}
-.mi.p{background:#F0E8FE;color:#7C3AED;}
-.mi.o{background:#FEF3E8;color:#EA8B2F;}
-.mi.t{background:#EAF0E4;color:#3D5A4C;}
-.mi.r{background:#FEE8E8;color:#DC3545;}
-
-.menu-label{flex:1;font-size:14px;font-weight:600;color:#1A1A2E;}
-.menu-sublabel{font-size:11px;color:#999;margin-top:1px;}
-.menu-chevron{color:#CCC;font-size:18px;font-weight:300;}
-
-/* Toggle */
-.toggle{
-    width:40px;height:24px;border-radius:12px;
-    background:#3D5A4C;position:relative;flex-shrink:0;
-}
-.toggle::after{
-    content:'';position:absolute;
-    width:20px;height:20px;background:#fff;
-    border-radius:50%;top:2px;right:2px;
-    box-shadow:0 1px 3px rgba(0,0,0,0.15);
-}
-
-/* Bottom Nav */
-.bottom-nav{
-    position:absolute;bottom:0;left:0;right:0;
-    display:flex;justify-content:space-around;
-    padding:8px 0 20px;
-    background:#fff;
-    border-top:1px solid #E8E8E8;
-    z-index:10;
-}
-.nav-btn{text-align:center;flex:1;cursor:pointer;}
-.nav-btn .nav-i{font-size:18px;color:#999;}
-.nav-btn .nav-l{font-size:9px;color:#999;font-weight:500;margin-top:1px;}
-.nav-btn.active .nav-i{color:#3D5A4C;}
-.nav-btn.active .nav-l{color:#3D5A4C;font-weight:700;}
-
-/* ========== SCREEN 2: CHAT SETTINGS ========== */
-.inner-header{
-    display:flex;align-items:center;
-    padding:56px 18px 14px;background:#fff;
-    border-bottom:1px solid #E8E8E8;
-}
-.inner-header .back{
-    color:#3D5A4C;font-size:22px;cursor:pointer;
-    width:30px;text-align:center;
-}
-.inner-header .title{
-    flex:1;text-align:center;font-size:17px;font-weight:700;
-    margin-left:-30px;
-}
-
-.chat-settings-body{
-    flex:1;background:#F4F5F7;overflow-y:auto;padding-bottom:20px;
-}
-.desc-note{
-    font-size:11px;color:#999;padding:4px 28px 0;line-height:1.4;
-}
-.transfer-row{
-    border-right:3px solid #3D5A4C;
-    background:#EAF0E4 !important;
-}
-.transfer-row .menu-label{color:#3D5A4C;}
-.transfer-row .menu-chevron{color:#3D5A4C;}
-
-/* ========== SCREEN 3: PREPARING ========== */
-.transfer-screen{
-    display:flex;flex-direction:column;
-    padding:56px 20px 24px;
-    background:#fff;flex:1;
-}
-.transfer-screen .inner-back{
-    color:#3D5A4C;font-size:20px;cursor:pointer;
-    align-self:flex-end;margin-bottom:10px;
-}
-
-.illust{
-    width:140px;height:100px;
-    background:linear-gradient(135deg,#EAF0E4,#C8D9BE);
-    border-radius:20px;margin:0 auto 20px;
-    display:flex;align-items:center;justify-content:center;gap:6px;
-}
-.illust .ph{
-    width:38px;height:55px;border-radius:7px;border:2px solid #3D5A4C;
-}
-.illust .ph.old{background:#C8D9BE;}
-.illust .ph.old::before{
-    content:'';display:block;margin:5px 4px;
-    width:calc(100% - 8px);height:28px;
-    background:#EAF0E4;border-radius:3px;
-}
-.illust .ph.new{background:#3D5A4C;}
-.illust .ph.new::before{
-    content:'';display:block;margin:5px 4px;
-    width:calc(100% - 8px);height:28px;
-    background:rgba(255,255,255,0.25);border-radius:3px;
-}
-.illust .arr{font-size:22px;color:#3D5A4C;}
-
-.t-title{font-size:19px;font-weight:800;color:#2D4738;text-align:center;margin-bottom:6px;}
-.t-sub{font-size:12px;color:#506B56;text-align:center;margin-bottom:24px;line-height:1.5;padding:0 10px;}
-
-/* Steps */
-.steps{text-align:right;padding:0 6px;flex:1;}
-.stp{display:flex;align-items:flex-start;margin-bottom:16px;gap:10px;}
-.stp-icon{
-    width:26px;height:26px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    font-size:12px;flex-shrink:0;margin-top:1px;
-    transition:all 0.4s;
-}
-.stp-icon.done{background:#EAF0E4;color:#3D5A4C;}
-.stp-icon.active{background:#FFF7ED;color:#F59E0B;}
-.stp-icon.pending{background:#F4F5F7;color:#CCC;}
-.stp-icon.active .spin{animation:spin 1.5s linear infinite;}
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-
-.stp-text h4{font-size:13px;font-weight:700;color:#2D4738;}
-.stp-text h4.done-t{color:#3D5A4C;}
-.stp-text h4.pending-t{color:#CCC;}
-.stp-text p{font-size:11px;color:#AAA;margin-top:1px;line-height:1.3;}
-
-/* Progress */
-.progress-area{margin-top:auto;padding-top:16px;}
-.prog-label{font-size:12px;color:#506B56;text-align:center;margin-bottom:6px;}
-.prog-bar{
-    width:100%;height:6px;background:#E8E8E8;
-    border-radius:3px;overflow:hidden;
-}
-.prog-fill{
-    height:100%;border-radius:3px;
-    background:linear-gradient(90deg,#3D5A4C,#5A7D5E);
-    transition:width 0.3s ease;width:0%;
-}
-.cancel-btn{
-    display:block;width:100%;padding:12px;
-    background:transparent;border:none;
-    color:#DC3545;font-size:14px;font-weight:600;
-    font-family:'Tajawal';cursor:pointer;margin-top:6px;
-}
-.next-btn,.done-btn{
-    display:block;width:100%;padding:12px;
-    background:linear-gradient(135deg,#3D5A4C,#5A7D5E);
-    border:none;border-radius:12px;
-    color:#fff;font-size:15px;font-weight:700;
-    font-family:'Tajawal';cursor:pointer;margin-top:8px;
-    box-shadow:0 4px 15px rgba(61,90,76,0.3);
-    transition:transform 0.2s,box-shadow 0.2s;
-}
-.next-btn:hover,.done-btn:hover{
-    transform:translateY(-1px);
-    box-shadow:0 6px 20px rgba(61,90,76,0.4);
-}
-.next-btn:active,.done-btn:active{transform:translateY(0);}
-
-/* ========== QR SCREEN ========== */
-.qr-display{
-    width:160px;height:160px;
-    background:#fff;border:3px solid #C2D2BA;
-    border-radius:14px;margin:0 auto 16px;
-    display:flex;align-items:center;justify-content:center;
-    position:relative;
-    box-shadow:0 4px 20px rgba(0,0,0,0.06);
-}
-.qr-pattern{
-    width:120px;height:120px;
-    background:
-        repeating-conic-gradient(#2D4738 0% 25%, transparent 0% 50%) 50%/10px 10px;
-    border-radius:4px;
-}
-.qr-center{
-    position:absolute;
-    width:32px;height:32px;
-    background:linear-gradient(135deg,#3D5A4C,#5A7D5E);
-    border-radius:8px;
-    display:flex;align-items:center;justify-content:center;
-    color:#fff;font-weight:900;font-size:12px;
-    box-shadow:0 2px 8px rgba(61,90,76,0.3);
-}
-
-/* Camera/Scanner */
-.scanner-area{
-    background:#111;border-radius:16px;
-    padding:20px;margin:0 auto 16px;
-    width:100%;max-width:240px;
-    position:relative;overflow:hidden;
-}
-.scan-frame{
-    width:160px;height:160px;
-    border:2px solid rgba(255,255,255,0.2);
-    border-radius:12px;margin:0 auto;
-    position:relative;
-    display:flex;align-items:center;justify-content:center;
-}
-.scan-corner{
-    position:absolute;width:24px;height:24px;
-    border-color:#5A7D5E;border-style:solid;border-width:0;
-}
-.scan-corner.tl{top:-1px;right:-1px;border-top-width:3px;border-right-width:3px;border-radius:0 10px 0 0;}
-.scan-corner.tr{top:-1px;left:-1px;border-top-width:3px;border-left-width:3px;border-radius:10px 0 0 0;}
-.scan-corner.bl{bottom:-1px;right:-1px;border-bottom-width:3px;border-right-width:3px;border-radius:0 0 10px 0;}
-.scan-corner.br{bottom:-1px;left:-1px;border-bottom-width:3px;border-left-width:3px;border-radius:0 0 0 10px;}
-
-.scan-line{
-    position:absolute;top:10%;left:10%;right:10%;
-    height:2px;background:linear-gradient(90deg,transparent,#5A7D5E,transparent);
-    opacity:0;
-    box-shadow:0 0 10px rgba(90,125,94,0.5);
-}
-.scan-line.animating{
-    opacity:1;
-    animation:scanMove 1.5s ease-in-out infinite;
-}
-@keyframes scanMove{
-    0%{top:10%}50%{top:85%}100%{top:10%}
-}
-
-.scan-qr-mini{
-    width:80px;height:80px;
-    background:repeating-conic-gradient(rgba(255,255,255,0.7) 0% 25%, transparent 0% 50%) 50%/8px 8px;
-    border-radius:4px;
-    opacity:0.4;
-}
-
-.scan-success{
-    position:absolute;top:0;left:0;right:0;bottom:0;
-    background:rgba(61,90,76,0.85);
-    display:flex;align-items:center;justify-content:center;
-    border-radius:12px;
-    opacity:0;transition:opacity 0.4s;
-    pointer-events:none;
-}
-.scan-success.show{opacity:1;}
-.scan-success .check{font-size:48px;color:#fff;}
-
-.scan-btn{
-    display:block;width:80%;margin:16px auto 0;
-    padding:10px;
-    background:linear-gradient(135deg,#3D5A4C,#5A7D5E);
-    border:none;border-radius:10px;
-    color:#fff;font-size:14px;font-weight:700;
-    font-family:'Tajawal';cursor:pointer;
-    transition:transform 0.2s;
-}
-.scan-btn:hover{transform:scale(1.03);}
-.scan-btn:active{transform:scale(0.98);}
-.scan-btn:disabled{opacity:0.5;cursor:default;transform:none;}
-
-/* ========== COMPLETE ========== */
-.success-badge{
-    width:70px;height:70px;
-    background:linear-gradient(135deg,#3D5A4C,#5A7D5E);
-    border-radius:50%;margin:10px auto 16px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:32px;color:#fff;
-    box-shadow:0 8px 30px rgba(61,90,76,0.35);
-    animation:popIn 0.5s cubic-bezier(.175,.885,.32,1.275);
-}
-@keyframes popIn{
-    0%{transform:scale(0);opacity:0}
-    100%{transform:scale(1);opacity:1}
-}
-
-/* ========== INSTRUCTION BAR ========== */
-.instruction-bar{
-    width:100%;padding:16px 40px;
-    background:#EAF0E4;
-    border-top:1px solid #C2D2BA;
-    display:flex;align-items:center;justify-content:center;gap:12px;
-    min-height:60px;
-}
-.instr-text{
-    color:#506B56;font-size:14px;font-weight:500;
-    text-align:center;
-}
-.instr-text strong{color:#3D5A4C;font-weight:700;}
-.click-hint{
-    display:inline-block;
-    padding:3px 12px;
-    background:rgba(90,125,94,0.12);
-    border:1px solid rgba(90,125,94,0.25);
-    border-radius:8px;
-    color:#3D5A4C;font-size:12px;font-weight:600;
-    animation:hintPulse 2s infinite;
-}
-@keyframes hintPulse{
-    0%,100%{opacity:1}50%{opacity:0.5}
-}
-
-/* ========== CONFETTI ========== */
-.confetti-container{
-    position:fixed;top:0;left:0;right:0;bottom:0;
-    pointer-events:none;z-index:1000;
-    overflow:hidden;
-}
-.confetti-piece{
-    position:absolute;top:-20px;
-    width:10px;height:10px;
-    animation:confettiFall linear forwards;
-}
-@keyframes confettiFall{
-    0%{transform:translateY(0) rotate(0deg);opacity:1}
-    100%{transform:translateY(110vh) rotate(720deg);opacity:0}
-}
-
-/* ========== RESPONSIVE ========== */
-@media(max-height:750px){
-    .phone{width:260px;height:540px;border-radius:36px;}
-    .phone-inner{border-radius:32px;}
-    .dynamic-island{width:80px;height:22px;top:8px;}
-}
-@media(max-width:700px){
-    .main-area{gap:20px;flex-wrap:wrap;}
-    .phone{width:240px;height:500px;border-radius:32px;}
-    .phone-inner{border-radius:28px;}
-    .top-bar{padding:14px 16px;}
-    .instruction-bar{padding:12px 16px;}
-}
+  * { font-family: 'Poppins', sans-serif; }
+  body {
+    background: linear-gradient(135deg, #fdf2f8 0%, #f5f3ff 50%, #fce7f3 100%);
+    min-height: 100vh;
+  }
+  .gradient-text {
+    background: linear-gradient(135deg, #c084fc 0%, #f472b6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 8px 32px rgba(192, 132, 252, 0.15);
+  }
+  .hover-lift { transition: all 0.3s ease; }
+  .hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(244, 114, 182, 0.25);
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #c084fc 0%, #f472b6 100%);
+    transition: all 0.3s;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(244, 114, 182, 0.4);
+  }
+  .nav-dock {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(192, 132, 252, 0.25);
+  }
+  .nav-dock a.active {
+    background: linear-gradient(135deg, #c084fc 0%, #f472b6 100%);
+    color: white;
+  }
+  .skill-dot { background: linear-gradient(135deg, #c084fc 0%, #f472b6 100%); }
+  section { scroll-margin-top: 80px; }
+  .fade-in { animation: fadeIn 0.8s ease-out; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    z-index: -1;
+  }
+  .project-thumb {
+    background: linear-gradient(135deg, #fbcfe8 0%, #ddd6fe 100%);
+  }
 </style>
 </head>
-<body>
+<body class="text-gray-800">
 
-<!-- ===== TOP BAR ===== -->
-<div class="top-bar">
-    <div class="logo-area">
-        <div class="logo-icon">ت</div>
-        <h1>توكلنا <span>| نقل المحادثات</span></h1>
+<div class="blob" style="background: #f9a8d4; width: 300px; height: 300px; top: 10%; left: -100px;"></div>
+<div class="blob" style="background: #c4b5fd; width: 400px; height: 400px; top: 40%; right: -150px;"></div>
+<div class="blob" style="background: #fbcfe8; width: 350px; height: 350px; bottom: 10%; left: 20%;"></div>
+
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 z-50 px-6 py-4 backdrop-blur-md bg-white/40">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <h1 class="text-xl font-bold gradient-text">Allulu Alkheraiji</h1>
+    <nav class="hidden md:flex gap-8 text-sm font-medium">
+      <a href="#home" class="hover:text-pink-500 transition">Home</a>
+      <a href="#about" class="hover:text-pink-500 transition">About</a>
+      <a href="#experience" class="hover:text-pink-500 transition">Experience</a>
+      <a href="#work" class="hover:text-pink-500 transition">Work</a>
+      <a href="#skills" class="hover:text-pink-500 transition">Skills</a>
+      <a href="#contact" class="hover:text-pink-500 transition">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Hero -->
+<section id="home" class="min-h-screen flex items-center justify-center px-6 pt-20 relative">
+  <div class="max-w-4xl mx-auto text-center fade-in">
+    <div class="flex justify-center gap-4 mb-8">
+      <a href="https://linkedin.com/in/allulu-alkheraiji-9a6834273" target="_blank" class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover-lift">
+        <i class="fab fa-linkedin-in text-purple-500"></i>
+      </a>
+      <a href="mailto:allulualkheraiji@gmail.com" class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover-lift">
+        <i class="fas fa-envelope text-pink-500"></i>
+      </a>
+      <a href="tel:0536127504" class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover-lift">
+        <i class="fas fa-phone text-purple-500"></i>
+      </a>
     </div>
-    <div class="steps-dots" id="stepsDots">
-        <div class="step-dot active" data-step="0"></div>
-        <div class="step-dot" data-step="1"></div>
-        <div class="step-dot" data-step="2"></div>
-        <div class="step-dot" data-step="3"></div>
-        <div class="step-dot" data-step="4"></div>
-        <div class="step-dot" data-step="5"></div>
+    <p class="text-lg text-gray-600 mb-4">Hello, I'm</p>
+    <h1 class="text-6xl md:text-7xl font-extrabold gradient-text mb-6">Allulu Alkheraiji</h1>
+    <p class="text-xl text-gray-600 mb-4 max-w-2xl mx-auto font-medium">
+      Aspiring Product Manager
+    </p>
+    <p class="text-base text-gray-500 mb-10 max-w-2xl mx-auto">
+      Turning user needs into thoughtful features — one story at a time.
+    </p>
+    <div class="flex gap-4 justify-center flex-wrap">
+      <a href="#work" class="btn-primary text-white px-8 py-3 rounded-full font-medium shadow-lg">
+        See My Work
+      </a>
+      <a href="#about" class="px-8 py-3 rounded-full font-medium glass-card hover-lift">
+        About Me
+      </a>
     </div>
-    <button class="restart-btn" onclick="restart()">⟳ إعادة العرض</button>
-</div>
+  </div>
+</section>
 
-<!-- ===== MAIN AREA ===== -->
-<div class="main-area" id="mainArea">
+<!-- About -->
+<section id="about" class="py-20 px-6 relative">
+  <div class="max-w-5xl mx-auto">
+    <p class="text-center text-gray-500 mb-2">Get to know me</p>
+    <h2 class="text-4xl md:text-5xl font-bold text-center gradient-text mb-12">About Me</h2>
 
-    <!-- OLD PHONE -->
-    <div class="phone-container visible-phone" id="oldPhoneWrap">
-        <div class="phone-tag"><span>📱 الجهاز القديم</span></div>
-        <div class="phone">
-            <div class="phone-inner">
-                <div class="dynamic-island"></div>
+    <div class="glass-card rounded-2xl p-8 md:p-12 mb-8">
+      <p class="text-gray-700 leading-relaxed text-lg mb-5">
+        I'm an Information Technology graduate who found her passion at the intersection of
+        <span class="gradient-text font-semibold">people, products, and problem-solving</span>.
+        What draws me to Product Management is the challenge of truly understanding why users behave the way they do —
+        and turning those insights into features that genuinely make their lives easier.
+      </p>
+      <p class="text-gray-700 leading-relaxed text-lg mb-5">
+        At <span class="font-semibold text-purple-600">SDAIA</span>, I've shaped features across Tawakkalna and Wakeb —
+        from designing a new identity layer that balances expression with privacy, to studying secure chat transfer
+        solutions, to building analytics plans that track what actually matters. With every feature, I ask two questions:
+        <em class="text-pink-500">Does this solve a real problem?</em> and
+        <em class="text-pink-500">Will users actually understand and love it?</em>
+      </p>
+      <p class="text-gray-700 leading-relaxed text-lg">
+        I care deeply about clarity — in requirements, in user flows, and in how teams communicate.
+        I believe the best products are built in the small details, through honest iteration and a willingness
+        to question assumptions.
+      </p>
+    </div>
 
-                <!-- ===== OLD SCREEN 1: SETTINGS ===== -->
-                <div class="screen active" id="old-s1">
-                    <div class="profile-header">
-                        <div class="avatar-circle">👤</div>
-                        <div class="profile-name">اللولو</div>
-                    </div>
-                    <div class="settings-body">
-                        <div class="menu-group">
-                            <div class="menu-row">
-                                <div class="mi g">🔑</div>
-                                <div style="flex:1"><div class="menu-label">الحساب</div></div>
-                                <span class="menu-chevron">‹</span>
-                            </div>
-                            <div class="menu-row">
-                                <div class="mi b">🔒</div>
-                                <div style="flex:1"><div class="menu-label">الخصوصية</div></div>
-                                <span class="menu-chevron">‹</span>
-                            </div>
-                            <div class="menu-row clickable highlight" id="chatMenuBtn" onclick="goToScreen(1)">
-                                <div class="mi t">💬</div>
-                                <div style="flex:1"><div class="menu-label" style="color:#3D5A4C;font-weight:800;">المحادثات</div></div>
-                                <span class="menu-chevron" style="color:#3D5A4C;">‹</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bottom-nav">
-                        <div class="nav-btn active"><div class="nav-i">👤</div><div class="nav-l">أنت</div></div>
-                        <div class="nav-btn"><div class="nav-i">💬</div><div class="nav-l">محادثات</div></div>
-                        <div class="nav-btn"><div class="nav-i">👥</div><div class="nav-l">مجتمعات</div></div>
-                        <div class="nav-btn"><div class="nav-i">📞</div><div class="nav-l">مكالمات</div></div>
-                        <div class="nav-btn"><div class="nav-i">🔔</div><div class="nav-l">تحديثات</div></div>
-                    </div>
-                </div>
-
-                <!-- ===== OLD SCREEN 2: CHAT SETTINGS ===== -->
-                <div class="screen" id="old-s2">
-                    <div class="inner-header">
-                        <span class="back" onclick="goToScreen(0)">›</span>
-                        <span class="title">المحادثات</span>
-                    </div>
-                    <div class="chat-settings-body">
-                        <div class="menu-group" style="margin-top:8px;">
-                            <div class="menu-row">
-                                <div style="flex:1"><div class="menu-label">خلفية المحادثة</div></div>
-                                <span class="menu-chevron">‹</span>
-                            </div>
-                        </div>
-                        <div class="menu-group">
-                            <div class="menu-row">
-                                <div style="flex:1"><div class="menu-label">حفظ في الصور</div></div>
-                                <div class="toggle"></div>
-                            </div>
-                        </div>
-                        <div class="desc-note">حفظ الصور والفيديوهات المستلمة تلقائياً في ألبوم الصور.</div>
-                        <div class="menu-group" style="margin-top:12px;">
-                            <div class="menu-row">
-                                <div style="flex:1"><div class="menu-label">نسخ احتياطي</div></div>
-                                <span class="menu-chevron">‹</span>
-                            </div>
-                            <div class="menu-row">
-                                <div style="flex:1"><div class="menu-label">تصدير محادثة</div></div>
-                                <span class="menu-chevron">‹</span>
-                            </div>
-                        </div>
-                        <div class="menu-group" style="margin-top:12px;">
-                            <div class="menu-row">
-                                <div style="flex:1"><div class="menu-label">تفريغ الرسائل الصوتية</div></div>
-                                <div class="toggle"></div>
-                            </div>
-                        </div>
-                        <div class="desc-note">تحويل الرسائل الصوتية إلى نص.</div>
-                        <div class="menu-group" style="margin-top:14px;">
-                            <div class="menu-row clickable transfer-row highlight" onclick="goToScreen(2)">
-                                <div style="flex:1">
-                                    <div class="menu-label">نقل سجل المحادثات</div>
-                                    <div class="menu-sublabel">نقل محادثاتك إلى جهاز آخر</div>
-                                </div>
-                                <span class="menu-chevron">‹</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ===== OLD SCREEN 3: PREPARING ===== -->
-                <div class="screen" id="old-s3">
-                    <div class="transfer-screen">
-                        <div class="inner-back" onclick="goToScreen(1)">›</div>
-                        <div class="illust">
-                            <div class="ph old"></div>
-                            <div class="arr">⇄</div>
-                            <div class="ph new"></div>
-                        </div>
-                        <div class="t-title">نقل سجل المحادثات</div>
-                        <div class="t-sub"></div>
-                        <div class="steps">
-                            <div class="stp">
-                                <div class="stp-icon active" id="old-s3-i1">
-                                    <span class="spin">⟳</span>
-                                </div>
-                                <div class="stp-text">
-                                    <h4 id="old-s3-t1">تحضير المحادثات</h4>
-                                    <p>قد يستغرق هذا بضع دقائق</p>
-                                </div>
-                            </div>
-                            <div class="stp">
-                                <div class="stp-icon pending" id="old-s3-i2"><span>⊞</span></div>
-                                <div class="stp-text"><h4 class="pending-t" id="old-s3-t2">مسح رمز QR لربط الأجهزة</h4></div>
-                            </div>
-                            <div class="stp">
-                                <div class="stp-icon pending" id="old-s3-i3"><span>💬</span></div>
-                                <div class="stp-text"><h4 class="pending-t" id="old-s3-t3">نقل المحادثات</h4></div>
-                            </div>
-                        </div>
-                        <div class="progress-area">
-                            <div class="prog-label" id="old-s3-lbl">جاري التحضير: ٠٪</div>
-                            <div class="prog-bar"><div class="prog-fill" id="old-s3-fill"></div></div>
-                            <button class="cancel-btn">إلغاء</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ===== OLD SCREEN 4: QR SCANNER ===== -->
-                <div class="screen" id="old-s4">
-                    <div class="transfer-screen">
-                        <div class="inner-back">›</div>
-                        <div style="background:#EAF0E4;border-radius:12px;padding:12px;margin-bottom:14px;text-align:right;">
-                            <p style="font-size:12px;color:#506B56;line-height:1.8;">
-                                ١. حمّل توكلنا على جهازك الجديد<br>
-                                ٢. سجّل بنفس رقم الهاتف<br>
-                                ٣. امسح رمز QR الظاهر على الجهاز الجديد
-                            </p>
-                        </div>
-                        <div class="scanner-area">
-                            <div class="scan-frame">
-                                <div class="scan-corner tl"></div>
-                                <div class="scan-corner tr"></div>
-                                <div class="scan-corner bl"></div>
-                                <div class="scan-corner br"></div>
-                                <div class="scan-qr-mini"></div>
-                                <div class="scan-line" id="scanLine"></div>
-                                <div class="scan-success" id="scanSuccess">
-                                    <span class="check">✓</span>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="scan-btn" id="scanBtn" onclick="startScan()">📷 ابدأ المسح</button>
-                        <button class="cancel-btn">إلغاء</button>
-                    </div>
-                </div>
-
-                <!-- ===== OLD SCREEN 5: TRANSFERRING ===== -->
-                <div class="screen" id="old-s5">
-                    <div class="transfer-screen">
-                        <div class="inner-back">›</div>
-                        <div class="illust">
-                            <div class="ph old"></div>
-                            <div class="arr">⇄</div>
-                            <div class="ph new"></div>
-                        </div>
-                        <div class="t-title" style="font-size:17px;">ابقَ على هذه الشاشة</div>
-                        <div class="t-sub"></div>
-                        <div class="steps">
-                            <div class="stp">
-                                <div class="stp-icon done"><span>✓</span></div>
-                                <div class="stp-text"><h4 class="done-t">تحضير المحادثات</h4></div>
-                            </div>
-                            <div class="stp">
-                                <div class="stp-icon done"><span>✓</span></div>
-                                <div class="stp-text"><h4 class="done-t">مسح رمز QR</h4></div>
-                            </div>
-                            <div class="stp">
-                                <div class="stp-icon active" id="old-s5-i1"><span>💬</span></div>
-                                <div class="stp-text">
-                                    <h4>نقل المحادثات</h4>
-                                    <p>أبقِ التطبيق مفتوحاً والجهازين بالقرب</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="progress-area">
-                            <div class="prog-label" id="old-s5-lbl">جاري النقل: ٠٪</div>
-                            <div class="prog-bar"><div class="prog-fill" id="old-s5-fill"></div></div>
-                            <button class="cancel-btn">إلغاء</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ===== OLD SCREEN 6: COMPLETE ===== -->
-                <div class="screen" id="old-s6">
-                    <div class="transfer-screen">
-                        <div class="inner-back">›</div>
-                        <div class="illust">
-                            <div class="ph old"></div>
-                            <div class="arr">⇄</div>
-                            <div class="ph new"></div>
-                        </div>
-                        <div class="t-title" style="font-size:17px;">انتقل إلى الجهاز الجديد</div>
-                        <div class="t-sub">اكتمل النقل. سيتم تسجيل خروجك تلقائياً من هذا الجهاز.</div>
-                        <div class="steps">
-                            <div class="stp">
-                                <div class="stp-icon done"><span>✓</span></div>
-                                <div class="stp-text"><h4 class="done-t">تحضير المحادثات</h4></div>
-                            </div>
-                            <div class="stp">
-                                <div class="stp-icon done"><span>✓</span></div>
-                                <div class="stp-text"><h4 class="done-t">مسح رمز QR</h4></div>
-                            </div>
-                            <div class="stp">
-                                <div class="stp-icon done"><span>✓</span></div>
-                                <div class="stp-text"><h4 class="done-t">نقل المحادثات</h4></div>
-                            </div>
-                        </div>
-                        <div class="progress-area">
-                            <button class="done-btn" onclick="restart()">تم ✓</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="glass-card rounded-2xl p-6 text-center hover-lift">
+        <div class="w-14 h-14 mx-auto rounded-full btn-primary flex items-center justify-center mb-4">
+          <i class="fas fa-compass text-white text-xl"></i>
         </div>
-    </div>
-
-    <!-- NEW PHONE -->
-    <div class="phone-container hidden-phone" id="newPhoneWrap">
-        <div class="phone-tag" style="color:#3D5A4C;"><span style="border-color:#C2D2BA;">📱 الجهاز الجديد</span></div>
-        <div class="phone">
-            <div class="phone-inner">
-                <div class="dynamic-island"></div>
-
-                <!-- ===== NEW SCREEN 4: QR DISPLAY ===== -->
-                <div class="screen active" id="new-s4">
-                    <div class="transfer-screen">
-                        <div class="inner-back">›</div>
-                        <div class="qr-display" id="qrDisplay">
-                            <div class="qr-pattern"></div>
-                            <div class="qr-center">ت</div>
-                        </div>
-                        <div class="t-title" style="font-size:16px;">امسح رمز QR بكاميرا الجهاز القديم</div>
-                        <div class="t-sub">استخدم كاميرا جهازك القديم لمسح الرمز أعلاه</div>
-                        <div class="steps">
-                            <div class="stp">
-                                <div class="stp-icon pending" id="new-s4-i1"><span>⊞</span></div>
-                                <div class="stp-text"><h4 id="new-s4-t1">مسح رمز QR لربط الأجهزة</h4></div>
-                            </div>
-                            <div class="stp">
-                                <div class="stp-icon pending"><span>💬</span></div>
-                                <div class="stp-text"><h4 class="pending-t">نقل المحادثات</h4></div>
-                            </div>
-                            <div class="stp">
-                                <div class="stp-icon pending"><span>⟳</span></div>
-                                <div class="stp-text"><h4 class="pending-t">معالجة المحادثات</h4></div>
-                            </div>
-                        </div>
-                        <div class="progress-area">
-                            <button class="cancel-btn">إلغاء</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ===== NEW SCREEN 5: TRANSFERRING ===== -->
-                <div class="screen" id="new-s5">
-                    <div class="transfer-screen">
-                        <div class="inner-back">›</div>
-                        <div class="illust">
-                            <div class="ph old"></div>
-                            <div class="arr">⇄</div>
-                            <div class="ph new"></div>
-                        </div>
-                        <div class="t-title" style="font-size:17px;">ابقَ على هذه الشاشة</div>
-                        <div class="t-sub"></div>
-                        <div class="steps">
-                            <div class="stp">
-                                <div class="stp-icon done"><span>✓</span></div>
-                                <div class="stp-text"><h4 class="done-t">مسح رمز QR</h4></div>
-                            </div>
-                            <div class="stp">
-                                <div class="stp-icon active"><span>💬</span></div>
-                                <div class="stp-text">
-                                    <h4>نقل المحادثات</h4>
-                                    <p>أبقِ التطبيق مفتوحاً والجهازين بالقرب</p>
-                                </div>
-                            </div>
-                            <div class="stp">
-                                <div class="stp-icon pending"><span>⟳</span></div>
-                                <div class="stp-text"><h4 class="pending-t">معالجة المحادثات</h4></div>
-                            </div>
-                        </div>
-                        <div class="progress-area">
-                            <div class="prog-label" id="new-s5-lbl">جاري النقل: ٠٪</div>
-                            <div class="prog-bar"><div class="prog-fill" id="new-s5-fill"></div></div>
-                            <button class="cancel-btn">إلغاء</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ===== NEW SCREEN 6: COMPLETE ===== -->
-                <div class="screen" id="new-s6">
-                    <div class="transfer-screen">
-                        <div class="inner-back">›</div>
-                        <div class="success-badge" id="successBadge">✓</div>
-                        <div class="t-title">اكتمل النقل</div>
-                        <div class="t-sub">سجل محادثاتك والوسائط متاحة الآن على هذا الجهاز.</div>
-                        <div class="steps">
-                            <div class="stp">
-                                <div class="stp-icon done"><span>✓</span></div>
-                                <div class="stp-text"><h4 class="done-t">مسح رمز QR</h4></div>
-                            </div>
-                            <div class="stp">
-                                <div class="stp-icon done"><span>✓</span></div>
-                                <div class="stp-text"><h4 class="done-t">نقل المحادثات</h4></div>
-                            </div>
-                            <div class="stp">
-                                <div class="stp-icon done"><span>✓</span></div>
-                                <div class="stp-text"><h4 class="done-t">معالجة المحادثات</h4></div>
-                            </div>
-                        </div>
-                        <div class="progress-area">
-                            <button class="next-btn" onclick="restart()">التالي ←</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <h3 class="font-bold text-lg mb-2">User-Centric</h3>
+        <p class="text-gray-600 text-sm">I start with the user — their needs, pains, and moments of friction.</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 text-center hover-lift">
+        <div class="w-14 h-14 mx-auto rounded-full btn-primary flex items-center justify-center mb-4">
+          <i class="fas fa-chart-line text-white text-xl"></i>
         </div>
+        <h3 class="font-bold text-lg mb-2">Data-Informed</h3>
+        <p class="text-gray-600 text-sm">I believe decisions get stronger when paired with the right metrics.</p>
+      </div>
+      <div class="glass-card rounded-2xl p-6 text-center hover-lift">
+        <div class="w-14 h-14 mx-auto rounded-full btn-primary flex items-center justify-center mb-4">
+          <i class="fas fa-sitemap text-white text-xl"></i>
+        </div>
+        <h3 class="font-bold text-lg mb-2">Detail-Obsessed</h3>
+        <p class="text-gray-600 text-sm">Great products live in the edge cases, user flows, and small touches.</p>
+      </div>
     </div>
-</div>
+  </div>
+</section>
 
-<!-- ===== INSTRUCTION BAR ===== -->
-<div class="instruction-bar">
-    <div class="instr-text" id="instrText">
-        اضغط على <strong>«المحادثات»</strong> للبدء
-        <span class="click-hint">👆 اضغط</span>
+<!-- Experience -->
+<section id="experience" class="py-20 px-6 relative">
+  <div class="max-w-6xl mx-auto">
+    <p class="text-center text-gray-500 mb-2">My Journey</p>
+    <h2 class="text-4xl md:text-5xl font-bold text-center gradient-text mb-12">Experience & Education</h2>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="glass-card rounded-2xl p-8 hover-lift">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-full btn-primary flex items-center justify-center">
+            <i class="fas fa-briefcase text-white"></i>
+          </div>
+          <span class="text-sm text-gray-500">Jan 2026 – May 2026</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">Product Management Intern</h3>
+        <p class="text-pink-500 font-medium mb-4">Saudi Data & AI Authority (SDAIA) — Tawakkalna</p>
+        <ul class="text-gray-600 text-sm space-y-2">
+          <li class="flex gap-2"><i class="fas fa-check-circle text-purple-400 mt-1"></i> Owned 4+ product features across Wakeb and Messages simultaneously</li>
+          <li class="flex gap-2"><i class="fas fa-check-circle text-purple-400 mt-1"></i> Authored detailed user stories and acceptance criteria from feature analysis</li>
+          <li class="flex gap-2"><i class="fas fa-check-circle text-purple-400 mt-1"></i> Led technical studies with benchmarking against WhatsApp, Signal, WeChat & LINE</li>
+          <li class="flex gap-2"><i class="fas fa-check-circle text-purple-400 mt-1"></i> Built an analytics measurement plan with 5 KPIs and 14 Firebase events</li>
+          <li class="flex gap-2"><i class="fas fa-check-circle text-purple-400 mt-1"></i> Collaborated daily with engineers, designers, and senior PMs in Agile ceremonies</li>
+        </ul>
+      </div>
+
+      <div class="glass-card rounded-2xl p-8 hover-lift">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-full btn-primary flex items-center justify-center">
+            <i class="fas fa-graduation-cap text-white"></i>
+          </div>
+          <span class="text-sm text-gray-500">Aug 2022 – May 2026</span>
+        </div>
+        <h3 class="text-2xl font-bold mb-2">Bachelor of Information Technology</h3>
+        <p class="text-pink-500 font-medium mb-4">Princess Nourah bint Abdulrahman University</p>
+        <div class="flex items-center gap-2 mb-4 flex-wrap">
+          <span class="px-3 py-1 rounded-full bg-purple-100 text-purple-600 text-sm font-medium">GPA: 4.80 / 5.00</span>
+        </div>
+        <p class="text-gray-600 text-sm">
+          Focused on software development, data analysis, and system design — building the technical
+          foundation that helps me bridge between engineering and product conversations.
+        </p>
+      </div>
     </div>
-</div>
+  </div>
+</section>
 
-<!-- ===== CONFETTI ===== -->
-<div class="confetti-container" id="confetti"></div>
+<!-- Featured Work -->
+<section id="work" class="py-20 px-6 relative">
+  <div class="max-w-6xl mx-auto">
+    <p class="text-center text-gray-500 mb-2">Featured Work</p>
+    <h2 class="text-4xl md:text-5xl font-bold text-center gradient-text mb-4">Product Projects</h2>
+    <p class="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+      A selection of the product studies and features I've shaped during my internship at SDAIA.
+    </p>
+
+    <!-- Project 1 -->
+    <div class="glass-card rounded-2xl overflow-hidden hover-lift mb-6">
+      <div class="md:flex">
+        <div class="md:w-2/5 project-thumb flex items-center justify-center p-12">
+          <div class="text-center">
+            <i class="fas fa-mobile-screen text-white text-6xl mb-3"></i>
+            <div class="flex justify-center gap-2">
+              <i class="fas fa-arrow-right text-white text-2xl"></i>
+              <i class="fas fa-lock text-white text-2xl"></i>
+              <i class="fas fa-arrow-right text-white text-2xl"></i>
+            </div>
+            <i class="fas fa-mobile-screen text-white text-6xl mt-3"></i>
+          </div>
+        </div>
+        <div class="md:w-3/5 p-8">
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <span class="text-xs px-3 py-1 rounded-full bg-purple-100 text-purple-600 font-medium">Feature Study</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-pink-100 text-pink-600 font-medium">Tawakkalna</span>
+            <span class="text-xs text-gray-500">April 2026</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-2">Chat Transfer Solution Study</h3>
+          <p class="text-purple-500 font-medium text-sm mb-3">Transferring message conversations between devices</p>
+          <p class="text-gray-600 text-sm mb-4">
+            Led an end-to-end technical study evaluating three architectural approaches —
+            <span class="font-medium">Frontend-to-Frontend, Cloud Backup, and Backend Backup</span> —
+            for securely transferring chat history between devices. Benchmarked the feature against WhatsApp,
+            Signal, WeChat, and LINE, then proposed Frontend-to-Frontend as the primary solution with a
+            defined user flow, failure handling, and security considerations.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Benchmarking</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Technical Analysis</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Security Design</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Solution Recommendation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="glass-card rounded-2xl overflow-hidden hover-lift mb-6">
+      <div class="md:flex md:flex-row-reverse">
+        <div class="md:w-2/5 project-thumb flex items-center justify-center p-12">
+          <div class="text-center text-white">
+            <i class="fas fa-chart-pie text-6xl mb-4"></i>
+            <div class="flex gap-4 justify-center text-sm font-semibold">
+              <div><div class="text-2xl">5</div><div>KPIs</div></div>
+              <div><div class="text-2xl">14</div><div>Events</div></div>
+              <div><div class="text-2xl">4</div><div>Stories</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="md:w-3/5 p-8">
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <span class="text-xs px-3 py-1 rounded-full bg-purple-100 text-purple-600 font-medium">Analytics</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-pink-100 text-pink-600 font-medium">Wakeb</span>
+            <span class="text-xs text-gray-500">2026</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-2">Analytics Measurement Plan</h3>
+          <p class="text-purple-500 font-medium text-sm mb-3">Tracking the performance of the Comments feature</p>
+          <p class="text-gray-600 text-sm mb-4">
+            Designed a full measurement plan to track user behavior on the Comments feature in Wakeb. Defined
+            <span class="font-medium">5 KPIs</span> (Comment Open Rate, Creation Rate, Reply Rate, Delete Rate, Avg Comments/Post)
+            and <span class="font-medium">14 Firebase events</span> mapped to 4 user stories — giving the product team
+            clear signals to measure engagement and iterate with confidence.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">KPI Definition</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Firebase Events</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Behavioral Analytics</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Measurement Strategy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="glass-card rounded-2xl overflow-hidden hover-lift mb-6">
+      <div class="md:flex">
+        <div class="md:w-2/5 project-thumb flex items-center justify-center p-12">
+          <div class="text-center text-white">
+            <i class="fas fa-user-secret text-6xl mb-4"></i>
+            <div class="text-sm font-semibold">Privacy ⟷ Engagement</div>
+          </div>
+        </div>
+        <div class="md:w-3/5 p-8">
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <span class="text-xs px-3 py-1 rounded-full bg-purple-100 text-purple-600 font-medium">Product Study</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-pink-100 text-pink-600 font-medium">Wakeb</span>
+            <span class="text-xs text-gray-500">March–April 2026</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-2">Separate Identity System</h3>
+          <p class="text-purple-500 font-medium text-sm mb-3">Balancing user expression with identity privacy</p>
+          <p class="text-gray-600 text-sm mb-4">
+            Proposed and studied the introduction of a separate identity layer in Wakeb, allowing users to
+            interact (e.g. commenting) under a chosen username instead of their official Tawakkalna identity.
+            Analyzed the trade-offs between user engagement and privacy, then documented the full concept,
+            user flow, and expected behavior in a structured product study.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Product Discovery</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Privacy Design</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Impact Analysis</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">User Flow</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project 4 -->
+    <div class="glass-card rounded-2xl overflow-hidden hover-lift mb-6">
+      <div class="md:flex md:flex-row-reverse">
+        <div class="md:w-2/5 project-thumb flex items-center justify-center p-12">
+          <div class="text-center text-white">
+            <i class="fas fa-list-check text-6xl mb-4"></i>
+            <div class="text-sm font-semibold">User Stories · AC · Flows</div>
+          </div>
+        </div>
+        <div class="md:w-3/5 p-8">
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <span class="text-xs px-3 py-1 rounded-full bg-purple-100 text-purple-600 font-medium">Requirements</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-pink-100 text-pink-600 font-medium">Wakeb + Messages</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-2">Social Features — Requirements & User Stories</h3>
+          <p class="text-purple-500 font-medium text-sm mb-3">From analysis to developer-ready specs</p>
+          <p class="text-gray-600 text-sm mb-4">
+            Owned the requirements work for multiple social interaction features —
+            <span class="font-medium">Comments, Likes, Threads</span> on Wakeb, and
+            <span class="font-medium">Message Reactions</span> on the Messages product. Analyzed each feature
+            from both user and system perspectives, identified edge cases, translated the work into structured
+            user stories, and defined clear acceptance criteria to guide development.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">User Stories</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Acceptance Criteria</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Edge Case Mapping</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Cross-Product Work</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graduation Project -->
+    <div class="glass-card rounded-2xl overflow-hidden hover-lift">
+      <div class="md:flex">
+        <div class="md:w-2/5 project-thumb flex items-center justify-center p-12">
+          <i class="fas fa-hands text-white text-6xl"></i>
+        </div>
+        <div class="md:w-3/5 p-8">
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <span class="text-xs px-3 py-1 rounded-full bg-purple-100 text-purple-600 font-medium">Graduation Project</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-pink-100 text-pink-600 font-medium">AI · Healthcare</span>
+            <span class="text-xs text-gray-500">2025 – 2026</span>
+          </div>
+          <h3 class="text-2xl font-bold mb-2">Ashirli</h3>
+          <p class="text-purple-500 font-medium text-sm mb-3">AI-Powered Sign Language Interpretation for Healthcare</p>
+          <p class="text-gray-600 text-sm mb-4">
+            Designed an AI-driven system that translates Saudi Sign Language (SSL) into text and speech in real time,
+            enabling bidirectional communication between deaf/mute patients and healthcare providers and improving
+            accessibility in hospitals and clinics.
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">AI</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Accessibility</span>
+            <span class="text-xs px-3 py-1 rounded-full bg-white/60">Healthcare</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills" class="py-20 px-6 relative">
+  <div class="max-w-6xl mx-auto">
+    <p class="text-center text-gray-500 mb-2">What I bring</p>
+    <h2 class="text-4xl md:text-5xl font-bold text-center gradient-text mb-12">Skills & Tools</h2>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="glass-card rounded-2xl p-8">
+        <div class="text-center mb-6">
+          <i class="fas fa-box-open text-3xl gradient-text"></i>
+          <h3 class="text-xl font-bold mt-2">Product Skills</h3>
+        </div>
+        <div class="space-y-3 text-sm">
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Requirements Analysis</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> User Stories & Acceptance Criteria</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Feature Analysis & Validation</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Competitive Benchmarking</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Analytics & KPI Design</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> User Flow Mapping</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Agile & Scrum</div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-8">
+        <div class="text-center mb-6">
+          <i class="fas fa-toolbox text-3xl gradient-text"></i>
+          <h3 class="text-xl font-bold mt-2">Tools</h3>
+        </div>
+        <div class="space-y-3 text-sm">
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Azure DevOps</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Figma</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Firebase Analytics</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Postman & Swagger</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Power BI</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Oracle SQL</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Microsoft Office</div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-8">
+        <div class="text-center mb-6">
+          <i class="fas fa-heart text-3xl gradient-text"></i>
+          <h3 class="text-xl font-bold mt-2">Soft Skills</h3>
+        </div>
+        <div class="space-y-3 text-sm">
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Analytical Thinking</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Problem-Solving</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Communication</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Attention to Detail</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Cross-Team Collaboration</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Adaptability</div>
+          <div class="flex items-center gap-3"><span class="skill-dot w-2 h-2 rounded-full"></span> Time Management</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Certifications -->
+    <div class="mt-12">
+      <h3 class="text-2xl font-bold text-center mb-6">Certifications</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="glass-card rounded-xl p-4 text-center hover-lift">
+          <i class="fab fa-microsoft text-purple-500 mb-2 text-xl"></i>
+          <p class="text-xs font-medium">Azure AI Fundamentals</p>
+          <p class="text-xs text-gray-500">Microsoft</p>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover-lift">
+          <i class="fas fa-palette text-pink-500 mb-2 text-xl"></i>
+          <p class="text-xs font-medium">Designing UI/UX</p>
+          <p class="text-xs text-gray-500">Coursera · IBM</p>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover-lift">
+          <i class="fas fa-database text-purple-500 mb-2 text-xl"></i>
+          <p class="text-xs font-medium">Data Fundamentals</p>
+          <p class="text-xs text-gray-500">IBM</p>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover-lift">
+          <i class="fas fa-chart-bar text-pink-500 mb-2 text-xl"></i>
+          <p class="text-xs font-medium">Data Modeling in Power BI</p>
+          <p class="text-xs text-gray-500">Coursera · Microsoft</p>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover-lift">
+          <i class="fas fa-brain text-purple-500 mb-2 text-xl"></i>
+          <p class="text-xs font-medium">Intro to Modern AI</p>
+          <p class="text-xs text-gray-500">Cisco</p>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover-lift">
+          <i class="fas fa-network-wired text-pink-500 mb-2 text-xl"></i>
+          <p class="text-xs font-medium">Intro to Networks</p>
+          <p class="text-xs text-gray-500">Cisco</p>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover-lift">
+          <i class="fas fa-server text-purple-500 mb-2 text-xl"></i>
+          <p class="text-xs font-medium">Database Foundations</p>
+          <p class="text-xs text-gray-500">Oracle</p>
+        </div>
+        <div class="glass-card rounded-xl p-4 text-center hover-lift">
+          <i class="fab fa-java text-pink-500 mb-2 text-xl"></i>
+          <p class="text-xs font-medium">Java Foundations</p>
+          <p class="text-xs text-gray-500">Oracle</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Languages -->
+    <div class="mt-12">
+      <h3 class="text-2xl font-bold text-center mb-6">Languages</h3>
+      <div class="grid md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+        <div class="glass-card rounded-2xl p-6 text-center hover-lift">
+          <div class="w-12 h-12 mx-auto rounded-full btn-primary flex items-center justify-center mb-3">
+            <i class="fas fa-language text-white"></i>
+          </div>
+          <h4 class="font-bold text-lg mb-1">Arabic</h4>
+          <span class="text-xs px-3 py-1 rounded-full bg-pink-100 text-pink-600 font-medium">Native</span>
+        </div>
+        <div class="glass-card rounded-2xl p-6 text-center hover-lift">
+          <div class="w-12 h-12 mx-auto rounded-full btn-primary flex items-center justify-center mb-3">
+            <i class="fas fa-globe text-white"></i>
+          </div>
+          <h4 class="font-bold text-lg mb-1">English</h4>
+          <span class="text-xs px-3 py-1 rounded-full bg-purple-100 text-purple-600 font-medium">Fluent</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="py-20 px-6 relative">
+  <div class="max-w-6xl mx-auto">
+    <p class="text-center text-gray-500 mb-2">Let's connect</p>
+    <h2 class="text-4xl md:text-5xl font-bold text-center gradient-text mb-12">Contact Me</h2>
+
+    <div class="grid md:grid-cols-2 gap-8">
+      <div>
+        <h3 class="text-2xl font-bold text-center mb-6">Talk to me</h3>
+        <div class="space-y-4">
+          <div class="glass-card rounded-2xl p-6 text-center hover-lift">
+            <i class="fas fa-envelope text-2xl text-pink-500 mb-3"></i>
+            <h4 class="font-bold mb-1">Email</h4>
+            <p class="text-sm text-gray-600 mb-3">allulualkheraiji@gmail.com</p>
+            <a href="mailto:allulualkheraiji@gmail.com" class="text-purple-500 text-sm font-medium hover:underline">
+              Write Me <i class="fas fa-play text-xs"></i>
+            </a>
+          </div>
+          <div class="glass-card rounded-2xl p-6 text-center hover-lift">
+            <i class="fas fa-phone text-2xl text-purple-500 mb-3"></i>
+            <h4 class="font-bold mb-1">Call</h4>
+            <p class="text-sm text-gray-600 mb-3">0536127504</p>
+            <a href="tel:0536127504" class="text-pink-500 text-sm font-medium hover:underline">
+              Call Now <i class="fas fa-play text-xs"></i>
+            </a>
+          </div>
+          <div class="glass-card rounded-2xl p-6 text-center hover-lift">
+            <i class="fab fa-linkedin text-2xl text-purple-500 mb-3"></i>
+            <h4 class="font-bold mb-1">LinkedIn</h4>
+            <p class="text-sm text-gray-600 mb-3">allulu-alkheraiji</p>
+            <a href="https://linkedin.com/in/allulu-alkheraiji-9a6834273" target="_blank" class="text-pink-500 text-sm font-medium hover:underline">
+              Connect <i class="fas fa-play text-xs"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="text-2xl font-bold text-center mb-6">Write Me your Message</h3>
+        <form class="space-y-4">
+          <div class="glass-card rounded-2xl p-4">
+            <label class="text-xs text-gray-500">Name</label>
+            <input type="text" placeholder="Enter name" class="w-full bg-transparent outline-none mt-1 text-gray-800 placeholder-gray-400"/>
+          </div>
+          <div class="glass-card rounded-2xl p-4">
+            <label class="text-xs text-gray-500">Mail</label>
+            <input type="email" placeholder="Enter email" class="w-full bg-transparent outline-none mt-1 text-gray-800 placeholder-gray-400"/>
+          </div>
+          <div class="glass-card rounded-2xl p-4">
+            <label class="text-xs text-gray-500">Message</label>
+            <textarea placeholder="Write your Message" rows="6" class="w-full bg-transparent outline-none mt-1 text-gray-800 placeholder-gray-400 resize-none"></textarea>
+          </div>
+          <button type="submit" class="btn-primary text-white px-8 py-3 rounded-full font-medium shadow-lg">
+            Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="mt-20 py-12 px-6" style="background: linear-gradient(135deg, #f9a8d4 0%, #c4b5fd 100%);">
+  <div class="max-w-6xl mx-auto text-center text-white">
+    <h3 class="text-3xl font-bold mb-6">Allulu Alkheraiji</h3>
+    <div class="flex justify-center gap-6 mb-6 text-sm flex-wrap">
+      <a href="#home" class="hover:text-pink-100">Home</a>
+      <a href="#about" class="hover:text-pink-100">About</a>
+      <a href="#work" class="hover:text-pink-100">Work</a>
+      <a href="#skills" class="hover:text-pink-100">Skills</a>
+      <a href="#contact" class="hover:text-pink-100">Contact</a>
+    </div>
+    <p class="text-sm opacity-80">© 2026 Allulu Alkheraiji. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- Dock -->
+<div class="fixed bottom-6 left-1/2 -translate-x-1/2 nav-dock rounded-full px-4 py-3 flex gap-2 z-50">
+  <a href="#home" class="dock-link w-12 h-12 rounded-full flex items-center justify-center hover:bg-purple-100 transition" data-section="home">
+    <i class="fas fa-home text-gray-600"></i>
+  </a>
+  <a href="#about" class="dock-link w-12 h-12 rounded-full flex items-center justify-center hover:bg-purple-100 transition" data-section="about">
+    <i class="fas fa-user text-gray-600"></i>
+  </a>
+  <a href="#work" class="dock-link w-12 h-12 rounded-full flex items-center justify-center hover:bg-purple-100 transition" data-section="work">
+    <i class="fas fa-briefcase text-gray-600"></i>
+  </a>
+  <a href="#skills" class="dock-link w-12 h-12 rounded-full flex items-center justify-center hover:bg-purple-100 transition" data-section="skills">
+    <i class="fas fa-code text-gray-600"></i>
+  </a>
+  <a href="#contact" class="dock-link w-12 h-12 rounded-full flex items-center justify-center hover:bg-purple-100 transition" data-section="contact">
+    <i class="fas fa-comment text-gray-600"></i>
+  </a>
+</div>
 
 <script>
-// ============ STATE ============
-let currentScreen = 0;
-let animInterval = null;
-
-const instructions = [
-    'اضغط على <strong>«المحادثات»</strong> في القائمة',
-    'اضغط على <strong>«نقل سجل المحادثات»</strong>',
-    'جاري <strong>تحضير المحادثات</strong>... انتظر قليلاً ⏳',
-    'اضغط <strong>«ابدأ المسح»</strong> على الجهاز القديم لمسح رمز QR 📷',
-    'جاري <strong>نقل المحادثات</strong>... انتظر حتى يكتمل ⏳',
-    '🎉 <strong>اكتمل النقل بنجاح!</strong> اضغط «تم» لإعادة العرض'
-];
-
-// ============ SCREEN NAVIGATION ============
-function goToScreen(screen) {
-    if (animInterval) { clearInterval(animInterval); animInterval = null; }
-    currentScreen = screen;
-    updateStepDots();
-    updateInstruction();
-
-    switch(screen) {
-        case 0: showOldScreen('old-s1'); hideNewPhone(); break;
-        case 1: showOldScreen('old-s2'); hideNewPhone(); break;
-        case 2: showOldScreen('old-s3'); hideNewPhone(); startPreparing(); break;
-        case 3: showOldScreen('old-s4'); showNewPhone(); showNewScreen('new-s4'); resetScan(); break;
-        case 4: showOldScreen('old-s5'); showNewScreen('new-s5'); startTransferring(); break;
-        case 5: showOldScreen('old-s6'); showNewScreen('new-s6'); launchConfetti(); break;
-    }
-}
-
-function showOldScreen(id) {
-    document.querySelectorAll('#oldPhoneWrap .screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-}
-
-function showNewScreen(id) {
-    document.querySelectorAll('#newPhoneWrap .screen').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-}
-
-function showNewPhone() {
-    const el = document.getElementById('newPhoneWrap');
-    el.classList.remove('hidden-phone');
-    el.classList.add('visible-phone');
-}
-
-function hideNewPhone() {
-    const el = document.getElementById('newPhoneWrap');
-    el.classList.remove('visible-phone');
-    el.classList.add('hidden-phone');
-}
-
-// ============ STEP DOTS ============
-function updateStepDots() {
-    document.querySelectorAll('.step-dot').forEach((dot, i) => {
-        dot.classList.remove('active', 'done');
-        if (i < currentScreen) dot.classList.add('done');
-        else if (i === currentScreen) dot.classList.add('active');
+  const sections = document.querySelectorAll('section');
+  const dockLinks = document.querySelectorAll('.dock-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const top = section.offsetTop - 100;
+      if (scrollY >= top) current = section.id;
     });
-}
-
-function updateInstruction() {
-    const el = document.getElementById('instrText');
-    const hint = currentScreen === 2 || currentScreen === 4 ? '' : '<span class="click-hint">👆 اضغط</span>';
-    el.innerHTML = instructions[currentScreen] + ' ' + hint;
-}
-
-// ============ SCREEN 3: PREPARING ============
-function startPreparing() {
-    const fill = document.getElementById('old-s3-fill');
-    const lbl = document.getElementById('old-s3-lbl');
-    const icon1 = document.getElementById('old-s3-i1');
-    const text1 = document.getElementById('old-s3-t1');
-    
-    fill.style.width = '0%';
-    icon1.className = 'stp-icon active';
-    icon1.innerHTML = '<span class="spin">⟳</span>';
-    text1.className = '';
-    
-    let pct = 0;
-    animInterval = setInterval(() => {
-        pct += 2;
-        if (pct > 100) pct = 100;
-        fill.style.width = pct + '%';
-        lbl.textContent = 'جاري التحضير: ' + toAr(pct) + '٪';
-        if (pct >= 100) {
-            clearInterval(animInterval);
-            animInterval = null;
-            icon1.className = 'stp-icon done';
-            icon1.innerHTML = '<span>✓</span>';
-            text1.className = 'done-t';
-            setTimeout(() => goToScreen(3), 600);
-        }
-    }, 60);
-}
-
-// ============ SCREEN 4: QR SCAN ============
-function resetScan() {
-    document.getElementById('scanLine').classList.remove('animating');
-    document.getElementById('scanSuccess').classList.remove('show');
-    document.getElementById('scanBtn').disabled = false;
-    document.getElementById('scanBtn').textContent = '📷 ابدأ المسح';
-}
-
-function startScan() {
-    const btn = document.getElementById('scanBtn');
-    btn.disabled = true;
-    btn.textContent = 'جاري المسح...';
-    
-    document.getElementById('scanLine').classList.add('animating');
-    
-    document.getElementById('new-s4-i1').className = 'stp-icon active';
-    document.getElementById('new-s4-i1').innerHTML = '<span class="spin">⟳</span>';
-    
-    setTimeout(() => {
-        document.getElementById('scanLine').classList.remove('animating');
-        document.getElementById('scanSuccess').classList.add('show');
-        
-        document.getElementById('new-s4-i1').className = 'stp-icon done';
-        document.getElementById('new-s4-i1').innerHTML = '<span>✓</span>';
-        document.getElementById('new-s4-t1').className = 'done-t';
-        
-        btn.textContent = '✓ تم المسح بنجاح';
-        
-        setTimeout(() => goToScreen(4), 1000);
-    }, 2500);
-}
-
-// ============ SCREEN 5: TRANSFERRING ============
-function startTransferring() {
-    const fillOld = document.getElementById('old-s5-fill');
-    const lblOld = document.getElementById('old-s5-lbl');
-    const fillNew = document.getElementById('new-s5-fill');
-    const lblNew = document.getElementById('new-s5-lbl');
-    
-    fillOld.style.width = '0%';
-    fillNew.style.width = '0%';
-    
-    let pct = 0;
-    animInterval = setInterval(() => {
-        pct += 1;
-        if (pct > 100) pct = 100;
-        
-        fillOld.style.width = pct + '%';
-        lblOld.textContent = 'جاري النقل: ' + toAr(pct) + '٪';
-        
-        const newPct = Math.max(0, pct - 2);
-        fillNew.style.width = newPct + '%';
-        lblNew.textContent = 'جاري النقل: ' + toAr(newPct) + '٪';
-        
-        if (pct >= 100) {
-            clearInterval(animInterval);
-            animInterval = null;
-            fillNew.style.width = '100%';
-            lblNew.textContent = 'جاري النقل: ١٠٠٪';
-            setTimeout(() => goToScreen(5), 800);
-        }
-    }, 50);
-}
-
-// ============ CONFETTI ============
-function launchConfetti() {
-    const container = document.getElementById('confetti');
-    container.innerHTML = '';
-    const colors = ['#3D5A4C','#5A7D5E','#C8D9BE','#F59E0B','#7C3AED','#EC4899','#EAF0E4'];
-    for (let i = 0; i < 80; i++) {
-        const piece = document.createElement('div');
-        piece.className = 'confetti-piece';
-        piece.style.left = Math.random() * 100 + '%';
-        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
-        piece.style.width = (Math.random() * 8 + 4) + 'px';
-        piece.style.height = (Math.random() * 8 + 4) + 'px';
-        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-        piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
-        piece.style.animationDelay = (Math.random() * 1) + 's';
-        container.appendChild(piece);
-    }
-    setTimeout(() => { container.innerHTML = ''; }, 5000);
-}
-
-// ============ HELPERS ============
-function toAr(num) {
-    return String(num).replace(/[0-9]/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
-}
-
-function restart() {
-    if (animInterval) { clearInterval(animInterval); animInterval = null; }
-    document.getElementById('confetti').innerHTML = '';
-    hideNewPhone();
-    document.querySelectorAll('#newPhoneWrap .screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('new-s4').classList.add('active');
-    document.getElementById('old-s3-fill').style.width = '0%';
-    document.getElementById('old-s3-lbl').textContent = 'جاري التحضير: ٠٪';
-    resetScan();
-    document.getElementById('new-s4-i1').className = 'stp-icon pending';
-    document.getElementById('new-s4-i1').innerHTML = '<span>⊞</span>';
-    document.getElementById('new-s4-t1').className = '';
-    setTimeout(() => goToScreen(0), 100);
-}
-
-// ============ KEYBOARD SUPPORT ============
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft' || e.key === ' ') {
-        e.preventDefault();
-        if (currentScreen === 0) goToScreen(1);
-        else if (currentScreen === 1) goToScreen(2);
-        else if (currentScreen === 3) startScan();
-    }
-    if (e.key === 'r' || e.key === 'R') restart();
-});
-
-// ============ INIT ============
-goToScreen(0);
+    dockLinks.forEach(link => {
+      link.classList.remove('active');
+      const icon = link.querySelector('i');
+      icon.classList.remove('text-white');
+      icon.classList.add('text-gray-600');
+      if (link.dataset.section === current) {
+        link.classList.add('active');
+        icon.classList.add('text-white');
+        icon.classList.remove('text-gray-600');
+      }
+    });
+  });
 </script>
+
 </body>
 </html>
